@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+spec:
+  progressDeadlineSeconds: 900
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: worker
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+      - name: worker
+        image: demucs-worker:latest
+        imagePullPolicy: IfNotPresent
+        # Override base image ENTRYPOINT (bash -c) so the worker script actually runs.
+        command: ["python3", "/worker-server.py"]
+        resources:
+          requests:
+            cpu: "500m"
+            memory: 4Gi
+          limits:
+            cpu: "4"
+            memory: 8Gi
+        env:
+        - name: REDIS_HOST
+          value: "redis"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: MINIO_HOST
+          value: "minio:9000"
+        - name: MINIO_ACCESS_KEY
+          value: "rootuser"
+        - name: MINIO_SECRET_KEY
+          value: "rootpass123"
+        - name: MINIO_INPUT_BUCKET
+          value: "queue"
+        - name: MINIO_OUTPUT_BUCKET
+          value: "output"
+        - name: DEMUCS_MODEL
+          value: "mdx_extra_q"
+        # 0 = no timeout. Default 20m avoids infinite hangs; raise for long songs.
+        - name: DEMUCS_TIMEOUT_SEC
+          value: "1200"

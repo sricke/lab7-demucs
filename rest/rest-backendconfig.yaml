@@ -1,0 +1,9 @@
+# GKE: longer timeout for large /apiv1/separate uploads via HTTP(S) load balancer.
+# https://cloud.google.com/kubernetes-engine/docs/how-to/ingress-features#configuring_ingress_features_through_backendconfig
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: rest-backendconfig
+  namespace: default
+spec:
+  timeoutSec: 600

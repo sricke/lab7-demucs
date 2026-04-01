@@ -1,0 +1,22 @@
+# GKE HTTP(S) load balancer Requires:
+# - rest Service type NodePort (rest-service.yaml)
+# - HttpLoadBalancing enabled on the cluster (default on GKE)
+# - GET / returns 200 on rest pods (health check)
+#
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rest-ingress
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: rest
+            port:
+              number: 5000

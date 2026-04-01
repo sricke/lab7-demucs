@@ -12,7 +12,7 @@ import glob
 # Use localhost & port 5000 if not specified by environment variable REST
 #
 REST = os.getenv("REST") or "localhost:5000"
-
+CALLBACK_URL = f"http://{REST}"
 ##
 # The following routine makes a JSON REST query of the specified type
 # and if a successful JSON reply is made, it pretty-prints the reply
@@ -42,7 +42,7 @@ for mp3 in glob.glob("data/*.mp3"):
         data={
             "mp3": base64.b64encode( open(mp3, "rb").read() ).decode('utf-8'),
             "callback": {
-                "url": "http://localhost:5000",
+                "url": CALLBACK_URL,
                 "data": {"mp3": mp3, 
                          "data": "to be returned"}
             }

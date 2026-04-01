@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rest
+  labels:
+    app: rest
+  annotations:
+    cloud.google.com/backend-config: '{"default": "rest-backendconfig"}'
+spec:
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  selector:
+    app: rest
